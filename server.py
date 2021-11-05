@@ -3,13 +3,13 @@ from threading import Thread
 
 
 class App:
-    def __init__(self):
+    def __init__(self, listen_to=10):
         self.server = Server()
 
-        self.server.setup(port=1512)
+        self.server.setup(port=1512, listen_to=listen_to*2)
 
         self.threads = []
-        for id in range(1, 10):
+        for id in range(1, listen_to*2):
             t = Thread(target=self.new_connection, args=(str(id),))
             self.threads.append(t)
             self.threads[-1].start()

@@ -13,6 +13,7 @@
 
 from socket import *
 from pickle import loads, dumps
+from typing import Any
 from rich import print
 
 
@@ -38,7 +39,7 @@ class Server:
             self.connections[id], (remotehost, remoteport) = self.server.accept() # accepting the next connection
             print(f"[white][blue]{remotehost}[/blue] connected with id [blue]'{id}'[/blue]\n")
 
-    def get(self, id: str): # get a message
+    def get(self, id: str) -> Any: # get a message
         try:
             return loads(self.connections[id].recv(1024))
         except ConnectionResetError:

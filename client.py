@@ -1,5 +1,4 @@
 from networking import Client
-from threading import Thread
 
 
 class App:
@@ -9,12 +8,9 @@ class App:
 
         self.client.post(input("Name: "))
 
-        t = Thread(target=self.get_messages, daemon=True)
-        t.start()
-
         done = False
         while not done:
-            message = input("")
+            message = self.get_message()
 
             if message == ".exit":
                 done = True
@@ -22,11 +18,19 @@ class App:
             else:
                 self.client.post(message)
 
+    def get_message(self):
+        done = False
+        message = ""
 
-    def get_messages(self):
-        while True:
-            message = self.client.get() + "\n"
-            print(message)
+        while not done:
+            line = input("")
+            if line == ".":
+                done = True
+            else:
+                message += "\n" + line
+
+        print("Sent\n")
+        return message
 
 
 if __name__ == "__main__":
