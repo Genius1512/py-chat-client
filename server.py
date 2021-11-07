@@ -6,7 +6,7 @@ from socket import gethostname, gethostbyname
 
 class App:
     def __init__(self, port, listen_to=10):
-        self.server = Server()
+        self.server = Server(debug=False)
 
         self.server.setup(port=port, listen_to=listen_to*2)
 
@@ -21,7 +21,7 @@ class App:
 
         name = self.server.get(id)
         if name == "client":
-            name = id
+            name = "Client" + id
 
         done = False
         while not done:

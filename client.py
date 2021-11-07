@@ -5,13 +5,17 @@ from sys import argv
 
 class App:
     def __init__(self, ip, port, name=None):
-        self.client = Client()
+        self.client = Client(debug=False)
         self.client.setup(ip=ip, port=port)
 
         if name == None:
             self.client.post(input("Name: "))
         else:
             self.client.post(name)
+
+        print("Connected")
+
+        print("Start typing a message. When done, type a single dot on a new line and hit enter")
 
         done = False
         while not done:
