@@ -1,4 +1,4 @@
-from networking import Server
+from high_lvl_networking import Server
 from threading import Thread
 
 

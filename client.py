@@ -1,4 +1,4 @@
-from networking import Client
+from high_lvl_networking import Client
 
 
 class App:

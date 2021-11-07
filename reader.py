@@ -1,5 +1,5 @@
 from socket import *
-from networking import Client
+from high_lvl_networking import Client
 from rich import print
 
 
@@ -17,7 +17,7 @@ class App:
 	def print_message(self, message):
 		message = message.split(": ", 1)
 
-		print(f'[blue]{message[0]}[/blue]: {message[1]}')
+		print(f'[blue]{message[0]}[/blue]: {message[1]}\n')
 
 
 if __name__ == "__main__":
