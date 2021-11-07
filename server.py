@@ -1,12 +1,14 @@
 from high_lvl_networking import Server
 from threading import Thread
+from sys import argv
+from socket import gethostname, gethostbyname
 
 
 class App:
-    def __init__(self, listen_to=10):
+    def __init__(self, port, listen_to=10):
         self.server = Server()
 
-        self.server.setup(port=1512, listen_to=listen_to*2)
+        self.server.setup(port=port, listen_to=listen_to*2)
 
         self.threads = []
         for id in range(1, listen_to*2):
@@ -31,4 +33,13 @@ class App:
 
 
 if __name__ == "__main__":
-    server = App()
+    port = None
+    try:
+        if argv[1] == "debug":
+            port = 1512
+        else:
+            port = int(input("Port: "))
+    except IndexError:
+        port = int(input("Port: "))
+
+    server = App(port=port)

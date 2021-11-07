@@ -1,10 +1,12 @@
 from high_lvl_networking import Client
+from socket import gethostname, gethostbyname
+from sys import argv
 
 
 class App:
-    def __init__(self):
+    def __init__(self, ip, port):
         self.client = Client()
-        self.client.setup(port=1512)
+        self.client.setup(ip=ip, port=port)
 
         self.client.post(input("Name: "))
 
@@ -34,4 +36,17 @@ class App:
 
 
 if __name__ == "__main__":
-    app = App()
+    ip = None
+    port = None
+    try:
+        if argv[1] == "debug":
+            ip = gethostbyname(gethostname())
+            port = 1512
+        else:
+            ip = input("IP: ")
+            port = int(input("Port: "))
+    except IndexError:
+        ip = input("IP: ")
+        port = int(input("Port: "))
+
+    app = App(ip, port)
