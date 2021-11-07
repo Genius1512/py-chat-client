@@ -7,7 +7,7 @@ from sys import argv
 class App:
 	def __init__(self, ip, port):
 		self.client = Client()
-		self.client.setup(port=1512)
+		self.client.setup(ip=ip, port=port)
 
 		self.client.post("reader")
 
