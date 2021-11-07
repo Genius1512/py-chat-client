@@ -20,6 +20,8 @@ class App:
         self.server.new_connection(id)
 
         name = self.server.get(id)
+        if name == "client":
+            name = id
 
         done = False
         while not done:

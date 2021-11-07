@@ -4,11 +4,14 @@ from sys import argv
 
 
 class App:
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, name=None):
         self.client = Client()
         self.client.setup(ip=ip, port=port)
 
-        self.client.post(input("Name: "))
+        if name == None:
+            self.client.post(input("Name: "))
+        else:
+            self.client.post(name)
 
         done = False
         while not done:
@@ -38,10 +41,13 @@ class App:
 if __name__ == "__main__":
     ip = None
     port = None
+    name = None
+
     try:
         if argv[1] == "debug":
             ip = gethostbyname(gethostname())
             port = 1512
+            name = "client"
         else:
             ip = input("IP: ")
             port = int(input("Port: "))
@@ -49,4 +55,4 @@ if __name__ == "__main__":
         ip = input("IP: ")
         port = int(input("Port: "))
 
-    app = App(ip, port)
+    app = App(ip, port, name=name)
