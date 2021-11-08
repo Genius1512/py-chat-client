@@ -19,16 +19,11 @@ class App:
 
 
         self.gui = Tk("Chat Client GUI")
-        self.gui.geometry("820x260")
+        self.gui.geometry("820x660")
         self.gui.configure(bg="#1e1e1e")
         self.gui.resizable(False, False)
         self.gui.protocol("WM_DELETE_WINDOW", self.on_close)
         self.gui.title(name)
-
-        self.gui.grid_columnconfigure(0, weight=1)
-        self.gui.grid_columnconfigure(1, weight=1)
-        self.gui.grid_rowconfigure(0, weight=1)
-        self.gui.grid_rowconfigure(1, weight=1)
         
         add_hotkey("ctrl + enter", self.send)
 
@@ -39,7 +34,7 @@ class App:
             x=10,
             y=10,
             width=400,
-            height=200
+            height=600
         )
         self.entry_field.configure(bg="#252527",
             fg="#9cdcfe",
@@ -54,7 +49,7 @@ class App:
             x=410,
             y=10,
             width=400,
-            height=200
+            height=600
         )
         self.chat_text.bind("<Key>", lambda e: "break")
         self.chat_text.configure(
@@ -68,7 +63,7 @@ class App:
         self.send_button.grid(row=1, column=1, sticky="NSEW")
         self.send_button.place(
             x=380,
-            y=220,
+            y=620,
             width=60,
             height=30
         )
@@ -80,8 +75,9 @@ class App:
 
         self.quit_button = Button(command=self.on_close, text="Quit")
         self.quit_button.grid(row=1, column=1, sticky="NSEW")
-        self.quit_button.place(x=580,
-            y=220,
+        self.quit_button.place(
+            x=580,
+            y=620,
             width=60,
             height=30
         )
