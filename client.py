@@ -57,16 +57,25 @@ class App:
             height=200
         )
         self.chat_text.bind("<Key>", lambda e: "break")
-        self.chat_text.configure(bg="#252527", fg="#9cdcfe", font=('Helvatical bold',14))
+        self.chat_text.configure(
+            bg="#252527",
+            fg="#9cdcfe",
+            font=('Helvatical bold',14)
+        )
+
 
         self.send_button = Button(command=self.send, text="Send")
         self.send_button.grid(row=1, column=1, sticky="NSEW")
-        self.send_button.place(x=380,
+        self.send_button.place(
+            x=380,
             y=220,
             width=60,
             height=30
         )
-        self.send_button.configure(bg="#007acc", fg="#000000")
+        self.send_button.configure(
+            bg="#007acc",
+            fg="#000000",
+        )
 
 
         self.quit_button = Button(command=self.on_close, text="Quit")
