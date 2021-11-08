@@ -1,7 +1,6 @@
 from high_lvl_networking import Server
 from threading import Thread
 from sys import argv
-from socket import gethostname, gethostbyname
 
 
 class App:
@@ -22,6 +21,12 @@ class App:
         name = self.server.get(id)
         if name == "client":
             name = "Client" + id
+
+        for connection in self.server.connections:
+            try:
+                self.server.post([connection], f'[Server]: {name} connected')
+            except Exception:
+                pass
 
         done = False
         while not done:

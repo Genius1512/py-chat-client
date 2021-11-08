@@ -70,19 +70,21 @@ class App:
         self.gui.mainloop()
 
     def send(self):
-        self.client.post(self.entry_field.get("1.0", END))
-
+        message = self.entry_field.get("1.0", END)[::-1]
+        message = message.replace("\n", "", 1)
+        message = message[::-1]
+        if not message == "":
+            self.client.post(message)
         self.entry_field.delete("1.0", END) 
 
     def get_messages(self):
         while True:
-            print("Recvieving")
             message = self.client.get()
-            print(message)
             self.print_message(message)
 
     def print_message(self, message):
-	    self.chat_text.insert(END, message + "\n")
+        self.chat_text.insert(END, message + "\n")
+        self.chat_text.see(END)
 
 
 if __name__ == "__main__":
