@@ -11,20 +11,27 @@ class App:
         self.client = Client(debug=False)
         self.client.setup(ip=ip, port=port)
 
-        self.gui = Tk("Chat Client GUI")
-        self.gui.geometry("820x260")
-        self.gui.configure(bg="#1e1e1e")
-        self.gui.resizable(False, False)
-
-        add_hotkey("ctrl + enter", self.send)
-
         if name == None:
             name = input("Name: ")
         else:
             name = name
         self.client.post(name)
 
+
+        self.gui = Tk("Chat Client GUI")
+        self.gui.geometry("820x260")
+        self.gui.configure(bg="#1e1e1e")
+        self.gui.resizable(False, False)
+        self.gui.protocol("WM_DELETE_WINDOW", self.on_close)
         self.gui.title(name)
+
+        self.gui.grid_columnconfigure(0, weight=1)
+        self.gui.grid_columnconfigure(1, weight=1)
+        self.gui.grid_rowconfigure(0, weight=1)
+        self.gui.grid_rowconfigure(1, weight=1)
+        
+        add_hotkey("ctrl + enter", self.send)
+
 
         self.entry_field = Text(self.gui)
         self.entry_field.grid(row=0, column=0, sticky="NSEW")
@@ -40,6 +47,7 @@ class App:
             insertbackground="#9cdcfe"
         )
 
+
         self.chat_text = Text(self.gui)
         self.chat_text.grid(row=0, column=1, sticky="NSEW")
         self.chat_text.place(
@@ -53,20 +61,27 @@ class App:
 
         self.send_button = Button(command=self.send, text="Send")
         self.send_button.grid(row=1, column=1, sticky="NSEW")
-        self.send_button.place(x=180,
+        self.send_button.place(x=380,
             y=220,
             width=60,
             height=30
         )
         self.send_button.configure(bg="#007acc", fg="#000000")
 
-        self.gui.grid_columnconfigure(0, weight=1)
-        self.gui.grid_columnconfigure(1, weight=1)
-        self.gui.grid_rowconfigure(0, weight=1)
-        self.gui.grid_rowconfigure(1, weight=1)
+
+        self.quit_button = Button(command=self.on_close, text="Quit")
+        self.quit_button.grid(row=1, column=1, sticky="NSEW")
+        self.quit_button.place(x=580,
+            y=220,
+            width=60,
+            height=30
+        )
+        self.quit_button.configure(bg="#007acc", fg="#000000")
+
 
         recveiver = Thread(target=self.get_messages, daemon=True)
         recveiver.start()
+
 
         self.gui.mainloop()
 
@@ -81,11 +96,17 @@ class App:
     def get_messages(self):
         while True:
             message = self.client.get()
+            if message == "Invalid name":
+                quit()
             self.print_message(message)
 
     def print_message(self, message):
         self.chat_text.insert(END, message + "\n")
         self.chat_text.see(END)
+
+    def on_close(self):
+        self.client.post(".exit")
+        self.gui.destroy()
 
 
 if __name__ == "__main__":

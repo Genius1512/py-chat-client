@@ -5,9 +5,10 @@ from sys import argv
 
 class App:
     def __init__(self, port, listen_to=50):
-        self.server = Server(debug=True)
-
+        self.server = Server(debug=False)
         self.server.setup(port=port, listen_to=listen_to*2)
+
+        self.invalid_names = ["[server]"]
 
         self.threads = []
         for id in range(1, listen_to*2):
@@ -22,6 +23,9 @@ class App:
         if name == "client":
             name = "Client" + id
 
+        print(f"New connection: '{name}'")
+
+
         for connection in self.server.connections:
             try:
                 self.server.post([connection], f'[Server]: {name} connected')
@@ -30,14 +34,20 @@ class App:
 
         done = False
         while not done:
+            if name.lower() in self.invalid_names:
+                print(f"'{name}' had an invalid name")
+                self.server.post([id], "Invalid name")
+                done = True
+                break
+
             try:
                 message = self.server.get(id)
             except Exception:
                 done = True
                 break
-            print("Recveived message")
             if message == ".exit":
                 done = True
+                break
             else:
                 message = f'{name}: {message}'
                 for connection in self.server.connections:
@@ -45,6 +55,14 @@ class App:
                         self.server.post([connection], message)
                     except Exception:
                         pass
+
+        for connection in self.server.connections:
+            try:
+                self.server.post([connection], f'[Server]: {name} disconnected')
+            except Exception:
+                pass
+        
+        print(f"'{name}' disconnected")
 
 
 if __name__ == "__main__":
