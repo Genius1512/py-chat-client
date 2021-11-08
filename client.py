@@ -19,9 +19,10 @@ class App:
         add_hotkey("ctrl + enter", self.send)
 
         if name == None:
-            self.client.post(input("Name: "))
+            name = input("Name: ")
         else:
-            self.client.post(name)
+            name = name
+        self.client.post(name)
 
         self.gui.title(name)
 
