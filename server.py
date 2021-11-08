@@ -27,6 +27,7 @@ class App:
         self.gui.configure(bg="#1e1e1e") # colors
         self.gui.resizable(False, False) # make not resizable
         self.gui.title("Server") # set title
+        self.gui.protocol("WM_DELETE_WINDOW", self.quit)
 
 
         # add widgets
@@ -63,7 +64,7 @@ class App:
         )
 
 
-        self.quit_button: Button = Button(command=quit, text="Quit")
+        self.quit_button: Button = Button(command=self.quit, text="Quit")
         self.quit_button.grid(row=1, column=1, sticky="NSEW")
         self.quit_button.place(
             x=380,
@@ -169,6 +170,10 @@ class App:
             self.server_information_text.insert(END, inf)
         # scroll to end
         self.server_information_text.see(END)
+
+    def quit(self):
+        self.gui.destroy()
+        quit()
 
 
 if __name__ == "__main__":
