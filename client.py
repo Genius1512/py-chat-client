@@ -1,6 +1,9 @@
 from high_lvl_networking import Client
 from socket import gethostname, gethostbyname
 from sys import argv
+from tkinter import *
+from keyboard import add_hotkey
+from threading import Thread
 
 
 class App:
@@ -8,38 +11,78 @@ class App:
         self.client = Client(debug=False)
         self.client.setup(ip=ip, port=port)
 
+        self.gui = Tk("Chat Client GUI")
+        self.gui.geometry("820x260")
+        self.gui.configure(bg="#1e1e1e")
+        self.gui.resizable(False, False)
+
+        add_hotkey("ctrl + enter", self.send)
+
         if name == None:
             self.client.post(input("Name: "))
         else:
             self.client.post(name)
 
-        print("Connected")
+        self.gui.title(name)
 
-        print("Start typing a message. When done, type a single dot on a new line and hit enter")
+        self.entry_field = Text(self.gui)
+        self.entry_field.grid(row=0, column=0, sticky="NSEW")
+        self.entry_field.place(
+            x=10,
+            y=10,
+            width=400,
+            height=200
+        )
+        self.entry_field.configure(bg="#252527",
+            fg="#9cdcfe",
+            font=('Helvatical bold', 14),
+            insertbackground="#9cdcfe"
+        )
 
-        done = False
-        while not done:
-            message = self.get_message()
+        self.chat_text = Text(self.gui)
+        self.chat_text.grid(row=0, column=1, sticky="NSEW")
+        self.chat_text.place(
+            x=410,
+            y=10,
+            width=400,
+            height=200
+        )
+        self.chat_text.bind("<Key>", lambda e: "break")
+        self.chat_text.configure(bg="#252527", fg="#9cdcfe", font=('Helvatical bold',14))
 
-            if message == ".exit":
-                done = True
-                self.client.post(".exit")
-            else:
-                self.client.post(message)
+        self.send_button = Button(command=self.send, text="Send")
+        self.send_button.grid(row=1, column=1, sticky="NSEW")
+        self.send_button.place(x=180,
+            y=220,
+            width=60,
+            height=30
+        )
+        self.send_button.configure(bg="#007acc", fg="#000000")
 
-    def get_message(self):
-        done = False
-        message = ""
+        self.gui.grid_columnconfigure(0, weight=1)
+        self.gui.grid_columnconfigure(1, weight=1)
+        self.gui.grid_rowconfigure(0, weight=1)
+        self.gui.grid_rowconfigure(1, weight=1)
 
-        while not done:
-            line = input("")
-            if line == ".":
-                done = True
-            else:
-                message += "\n" + line
+        recveiver = Thread(target=self.get_messages, daemon=True)
+        recveiver.start()
 
-        print("Sent\n")
-        return message
+        self.gui.mainloop()
+
+    def send(self):
+        self.client.post(self.entry_field.get("1.0", END))
+
+        self.entry_field.delete("1.0", END) 
+
+    def get_messages(self):
+        while True:
+            print("Recvieving")
+            message = self.client.get()
+            print(message)
+            self.print_message(message)
+
+    def print_message(self, message):
+	    self.chat_text.insert(END, message + "\n")
 
 
 if __name__ == "__main__":

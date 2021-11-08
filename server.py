@@ -5,8 +5,8 @@ from socket import gethostname, gethostbyname
 
 
 class App:
-    def __init__(self, port, listen_to=10):
-        self.server = Server(debug=False)
+    def __init__(self, port, listen_to=50):
+        self.server = Server(debug=True)
 
         self.server.setup(port=port, listen_to=listen_to*2)
 
@@ -25,13 +25,21 @@ class App:
 
         done = False
         while not done:
-            message = self.server.get(id)
+            try:
+                message = self.server.get(id)
+            except Exception:
+                done = True
+                break
+            print("Recveived message")
             if message == ".exit":
                 done = True
             else:
                 message = f'{name}: {message}'
                 for connection in self.server.connections:
-                    self.server.post([connection], message)
+                    try:
+                        self.server.post([connection], message)
+                    except Exception:
+                        pass
 
 
 if __name__ == "__main__":
