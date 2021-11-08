@@ -50,6 +50,7 @@ class App:
                 break
             else:
                 message = f'{name}: {message}'
+                message = message.replace("\n", f"\n{' '*(len(name) + 7)}")
                 for connection in self.server.connections:
                     try:
                         self.server.post([connection], message)
