@@ -18,7 +18,7 @@ class App:
         self.invalid_names: list[str] = ["[server]"] 
 
         # status and names are stored in this
-        self.connections: dict[str, str] = {}
+        self.connections: dict[str, dict[str, str]] = {}
 
 
         # init Tk
@@ -76,11 +76,12 @@ class App:
 
 
         # create threads
-        self.threads: list[Thread] = []
+        self.threads: list[Thread] =  []
         for id in range(1, listen_to*2):
             t: Thread = Thread(target=self.new_connection, args=(str(id),))
             self.threads.append(t)
             self.threads[-1].start()
+            
 
         print("Server setup")
 
@@ -116,7 +117,6 @@ class App:
 
         # update server information
         if not done:
-            self.connections[name] = {"status": "on"}
             self.update_server_information()
         
         while not done:
